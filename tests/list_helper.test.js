@@ -85,3 +85,19 @@ describe('total likes', () => {
     assert.strictEqual(result, 0)
   })
 })
+
+describe('favorite blog', () => {
+
+  test('when list has only one blog, equals to that blog', () => {
+    const result = listHelper.favoriteBlog(oneBlog)
+    assert.deepStrictEqual(result, oneBlog[0])
+  })
+  test('when list has many blogs, equals the latest blog with most likes', () => {
+    const result = listHelper.favoriteBlog(manyBlogs)
+    assert.deepStrictEqual(result, manyBlogs[2])
+  })
+  test('when list is empty, return empty object', () => {
+    const result = listHelper.favoriteBlog([])
+    assert.deepStrictEqual(result, {})
+  })
+})
