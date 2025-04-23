@@ -1,0 +1,37 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "test",
+  "author": "test",
+  "url": "test",
+  "likes": 1
+}
+
+###
+
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "incomplete"
+}
+
+###
+
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+  "malformed":"json",
+}
+
+###
+
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+  "validation":"error"
+}
+
