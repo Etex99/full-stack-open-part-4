@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Etex99/full-stack-open-part-4#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
