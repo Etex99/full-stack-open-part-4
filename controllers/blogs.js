@@ -1,6 +1,9 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const { userExtractor, tokenExtractor } = require('../utils/middleware')
+const jwt = require('jsonwebtoken')
+const usersRouter = require('./users')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -9,17 +12,16 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response, next) => {
-  const body = request.body
-  const user = await User.findOne({})
+blogsRouter.post('/', tokenExtractor, userExtractor, async (request, response, next) => {
+  const { body, token, user } = request
 
   const blog = new Blog({
     title: body.title,
-    author: body.author || "",
     url: body.url,
-    likes: body.likes || null,
-    user: user._id
+    user: token.id
   })
+  if (body.author) blog.author = body.author
+  if (body.likes) blog.likes = body.likes
 
   try {
     const result = await blog.save()
@@ -32,8 +34,20 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', tokenExtractor, userExtractor, async (request, response, next) => {
+  const { token, user } = request
+
   try {
+    const blogToDelete = await Blog.findById(request.params.id)
+
+    if (blogToDelete === null) response.status(204).end()
+
+    if (blogToDelete.user.toString() !== user._id.toString()) {
+      return response.status(401).json({
+        error: 'cannot delete blog of someone else'
+      })
+    }
+
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
   } catch (error) {
@@ -41,11 +55,20 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   }
 })
 
-blogsRouter.put('/:id', async (request, response, next) => {
-  const body = request.body
-  delete body.id
+blogsRouter.put('/:id', tokenExtractor, userExtractor, async (request, response, next) => {
+  const { body, token, user } = request
 
   try {
+    const blogToEdit = await Blog.findById(request.params.id)
+
+    if (blogToEdit === null) response.status(200).end()
+
+    if (blogToEdit.user.toString() !== user._id.toString()) {
+      return response.status(401).json({
+        error: 'cannot edit blog of someone else'
+      })
+    }
+
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, body, { new: true, runValidators: true, context: 'query' })
     response.json(updatedBlog)
     

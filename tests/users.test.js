@@ -1,9 +1,5 @@
 const assert = require('node:assert')
 const { test, describe, after, beforeEach } = require('node:test')
-
-const bcrypt = require('bcrypt')
-
-const User = require('../models/user')
 const mongoose = require('mongoose')
 
 const supertest = require('supertest')
@@ -13,12 +9,7 @@ const helper = require('./test_helper')
 const api = supertest(app)
 
 beforeEach(async () => {
-  await User.deleteMany({})
-
-  const passwordHash = await bcrypt.hash('sekret', 10)
-  const user = new User({ username: 'root', passwordHash })
-
-  await user.save()
+  await helper.resetTestUsers()
 })
 
 test('get request returns all users in json format', async () => {
@@ -28,10 +19,10 @@ test('get request returns all users in json format', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
-  assert.strictEqual(response.body.length, 1)
+  assert.strictEqual(response.body.length, 2)
 })
 
-describe('when there is initially one user in db', () => {
+describe('when there are initially users in db', () => {
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 

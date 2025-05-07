@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/000000000000000000000000 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVhNDIyYWE3MWI1NGE2NzYyMzRkMTMzNyIsImlhdCI6MTc0NjYzMDY4MCwiZXhwIjoxNzQ2NjM0MjgwfQ.3-UGh7CPQS-2QfMeWmuyuf7gyQa5X1_Q0m4BgVsZyoA
+
+{
+  "title": "test",
+  "author": "new author",
+  "url": "test",
+  "likes": 2
+}
