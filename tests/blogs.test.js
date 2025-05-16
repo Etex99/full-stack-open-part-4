@@ -216,21 +216,6 @@ describe('updating blogs', async () => {
     assert(blogToUpdate.id === updatedBlog.id)
     assert.strictEqual(updatedBlog.likes, 8)
   })
-  test('user cannot edit blog that belongs to someone else', async () => {
-    const blogToUpdate = helper.initialBlogs[0]
-    const updateFields = {
-      likes: 8
-    }
-
-    const result = await api
-      .put(`/api/blogs/${blogToUpdate._id}`)
-      .send(updateFields)
-      .set({ Authorization: `Bearer ${tokenForDummy}` })
-      .expect(401)
-      .expect('Content-Type', /application\/json/)
-
-    assert(result.body.error.includes('cannot edit blog of someone else'))
-  })
 
   test('trying to update a blog that does not exist makes no changes to db and is responded with 200', async () => {
     const blogsBeforeUpdate = await helper.blogsInDb()

@@ -56,20 +56,16 @@ blogsRouter.delete('/:id', tokenExtractor, userExtractor, async (request, respon
 })
 
 blogsRouter.put('/:id', tokenExtractor, userExtractor, async (request, response, next) => {
-  const { body, token, user } = request
+  const { body } = request
 
   try {
-    const blogToEdit = await Blog.findById(request.params.id)
-
-    if (blogToEdit === null) response.status(200).end()
-
-    if (blogToEdit.user.toString() !== user._id.toString()) {
-      return response.status(401).json({
-        error: 'cannot edit blog of someone else'
-      })
+    const blog = {
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes
     }
-
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, body, { new: true, runValidators: true, context: 'query' })
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true, context: 'query' })
     response.json(updatedBlog)
     
   } catch (error) {
