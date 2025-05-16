@@ -6,6 +6,7 @@ const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 const User = require('../models/user')
+const blog = require('../models/blog')
 
 const api = supertest(app)
 let tokenForRoot = null
@@ -210,6 +211,7 @@ describe('updating blogs', async () => {
     const updatedBlog = blogsAfterUpdate.find(blog => blog.id === blogToUpdate.id)
 
     assert.strictEqual(blogsBeforeUpdate.length, blogsAfterUpdate.length)
+    assert.deepStrictEqual(blogToUpdate.user, updatedBlog.user)
     assert(blogToUpdate.title === updatedBlog.title)
     assert(blogToUpdate.author === updatedBlog.author)
     assert(blogToUpdate.url === updatedBlog.url)
