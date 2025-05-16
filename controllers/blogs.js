@@ -66,7 +66,9 @@ blogsRouter.put('/:id', tokenExtractor, userExtractor, async (request, response,
       likes: body.likes,
       user: body.user
     }
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true, context: 'query' })
+    const updatedBlog = await Blog
+      .findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true, context: 'query' })
+      .populate('user', { username: 1, name: 1 })
     response.json(updatedBlog)
     
   } catch (error) {
