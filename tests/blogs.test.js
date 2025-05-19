@@ -3,10 +3,7 @@ const { test, describe, after, beforeEach } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const Blog = require('../models/blog')
 const helper = require('./test_helper')
-const User = require('../models/user')
-const blog = require('../models/blog')
 
 const api = supertest(app)
 let tokenForRoot = null
